@@ -1,0 +1,25 @@
+module Wireshark;
+
+public type Mode = enum {
+    Packet,
+    Stream,
+};
+
+public type Dissector = struct {
+    name: string;
+    mode: Mode;
+    short_name: string;
+    filter_name: string &optional;
+    parser: type &optional;
+    parser_orig: type &optional;
+    parser_resp: type &optional;
+    ports: set<port> &default=set();
+};
+
+public function register_dissector(dissector: Dissector): void &cxxname="::spicy_wireshark::register_dissector";
+public function display(unit_: any &cxx-any-as-ptr) &cxxname="::spicy_wireshark::display";
+
+function X() {
+    display(42);
+}
+

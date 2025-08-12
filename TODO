@@ -1,0 +1,5 @@
+- Tree rendering:
+    - -O output isn't working correctly/well for all types; observered with JSON in particular
+    - Render only computed branches of a switch statement? (might need additional type information)
+
+- Support unit contexts.

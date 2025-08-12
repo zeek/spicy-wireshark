@@ -1,0 +1,13 @@
+// See the file "COPYING" in the main distribution directory for copyright.
+
+#pragma once
+
+#include <autogen/version.h>
+
+#include <hilti/rt/filesystem.h>
+
+namespace spicy::wireshark::configuration {
+
+#define SPICY_VERSION_NUMBER "${SPICY_VERSION_NUMBER}"
+
+} // namespace spicy::wireshark::configuration
