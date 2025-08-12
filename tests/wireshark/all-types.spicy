@@ -1,0 +1,107 @@
+# @TEST-REQUIRES: which tshark && which spicyc
+# @TEST-EXEC: spicyc -Qjd -L ${MODULE_PATH} -o test.hlto %INPUT
+#
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/all-types.pcap -O test >output.txt 2>&1
+# @TEST-EXEC: btest-diff output.txt
+#
+# Disabled for now; JSON output isn't quite right yet, but not a priority.
+# TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/all-types.pcap -T json >output.json.tmp
+# TEST-EXEC: cat output.json.tmp | jq '.. | objects | to_entries[] | select(.key == "test_tree")' >output.json
+# TEST-EXEC: btest-diff output.json
+
+module Test;
+
+import Wireshark;
+
+Wireshark::register_dissector([
+            $name = "Test Protocol",
+            $short_name = "test",
+            $mode = Wireshark::Mode::Packet,
+            $ports = set(8888/udp),
+            $parser_orig = Test::Types
+]);
+
+type MyEnum = enum {
+    A,
+    B = 2,
+    C,
+};
+
+type MyStruct = struct {
+    i: int64;
+    s: time &optional;
+};
+
+type MyBitfield = bitfield(8) {
+    a: 0..7;
+    b: 1..2;
+    c: 6..7; # &convert="a string" TODO
+};
+
+public type Types = unit {
+    a: bytes &size=5;
+    b: int16;
+    c: int32;
+    d: int64;
+    e: int8;
+    f: uint16;
+    g: uint32;
+    h: uint64;
+    i: uint8;
+    j: bytes &size=1 &convert=3.14;
+    k: bytes &size=1 &convert=1.2.3.4;
+    l: bytes &size=1 &convert=[2001:0db8::1428:57ab];
+    m: bytes &size=1 &convert=True;
+    n: bytes &size=1 &convert="MyStröng";
+    o: bytes &size=1 &convert=time(1617238923);
+    p: bytes &size=1 &convert=80/tcp;
+    q: bytes &size=1 &convert=interval(4.0);
+    r: bytes &size=1 &convert=MyEnum(2);
+    s: MyBitfield;
+     : bitfield(16) {
+        x: 1..4;
+        y: 0..15;
+      };
+
+    var v1: bytes& = new b"xyz";
+    var v2: optional<int64> = 42;
+    var v3: optional<string>;
+    var v4: MyStruct = [$i = 11];
+    var v5: set<uint64> = set<uint64>(1, 2, 3);
+    var v6: tuple<a: int64, string> = (47, "foo"); # Tuple conversion will ignore element names.
+    var v7: vector<string> = vector<string>("X", "Y", "Z");
+    var v8: map<int64, string> = map(1: "X", 2: "Y", 3: "Z");
+    var v9: vector<MyEnum> = [MyEnum::A, MyEnum::B, MyEnum::Undef, MyEnum(9999)];
+
+    # TODO:
+    #  - Bitset
+
+    # Cannot easily create/test:
+    #   - weak_reference
+    #   - value_reference (covered indirectly)
+    #   - void
+
+    # Not currently supported:
+    #  - Any
+    #  - BytesIterator
+    #  - Error
+    #  - Exception
+    #  - Function
+    #  - Library
+    #  - MapIterator
+    #  - Network
+    #  - Null
+    #  - RegExp
+    #  - Result
+    #  - SetIterator
+    #  - Stream
+    #  - StreamIterator
+    #  - StreamView
+    #  - Union
+    #  - VectorIterator
+
+    # Test one not supported type to produce an error message.
+    var not_supported: stream;
+
+    # on %done { print self; }
+};
