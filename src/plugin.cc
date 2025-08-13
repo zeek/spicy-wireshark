@@ -14,7 +14,6 @@
 #include <epan/proto_data.h>
 #include <wireshark.h>
 #include <wsutil/filesystem.h>
-#include <wsutil/plugins.h>
 #include <wsutil/wslog.h>
 
 #include <hilti/rt/libhilti.h>
@@ -58,7 +57,7 @@ static void makePluginSymbolsGlobal() {
 
     void* handle = dlopen(info.dli_fname, RTLD_NOLOAD | RTLD_GLOBAL);
     if ( ! handle ) {
-        spicy_fatal_error("could not load re-load Spicy plugin: %s", dlerror());
+        spicy_fatal_error("could not re-load Spicy plugin: %s", dlerror());
         return;
     }
 }
@@ -569,7 +568,7 @@ static void proto_reg_handoff_spicy() {
 extern "C" {
 extern WS_DLL_PUBLIC_DEF const gchar plugin_version[] = PLUGIN_VERSION_NUMBER;
 extern WS_DLL_PUBLIC_DEF const int plugin_want_major = 4;
-extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = 4;
+extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = 2;
 
 WS_DLL_PUBLIC_DEF void plugin_register() {
     makePluginSymbolsGlobal();

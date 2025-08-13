@@ -72,7 +72,7 @@ struct ExpertField {
     int severity = PI_NOTE;
     std::string summary;
 
-    expert_field* expert_field = nullptr;
+    expert_field* expert_field_ = nullptr;
     ei_register_info* ei_ri = nullptr;
 
     ei_register_info __ei_ri;

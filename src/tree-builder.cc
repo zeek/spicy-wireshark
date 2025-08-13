@@ -47,9 +47,9 @@ static ExpertField* _registerExpertItem(Dissector* dissector, const std::string&
     ef->group = group;
     ef->severity = severity;
     ef->summary = summary;
-    ef->expert_field = ei_expert_fields.store(EI_INIT);
+    ef->expert_field_ = ei_expert_fields.store(EI_INIT);
 
-    ef->__ei_ri = {ef->expert_field, {ef->name.c_str(), ef->group, ef->severity, ef->summary.c_str(), EXPFILL}};
+    ef->__ei_ri = {ef->expert_field_, {ef->name.c_str(), ef->group, ef->severity, ef->summary.c_str(), EXPFILL}};
     ef->ei_ri = &ef->__ei_ri;
 
     return ef;
@@ -713,7 +713,7 @@ static void _addDataValueToTree(const Packet& packet, proto_tree* tree, proto_it
             }
             else {
                 auto ei = get_expert_item("spicy.error.unsupported");
-                proto_tree_add_expert_format(tree, packet.pinfo, ei->expert_field, packet.tvb, start, length,
+                proto_tree_add_expert_format(tree, packet.pinfo, ei->expert_field_, packet.tvb, start, length,
                                              "%sunsupported address type", field_prefix.c_str());
             }
 
@@ -1025,7 +1025,7 @@ static void _addDataValueToTree(const Packet& packet, proto_tree* tree, proto_it
         case TypeInfo::Error: {
             auto value = std::get<data::Error>(v.value);
             auto ei = get_expert_item(value.ei_name);
-            proto_tree_add_expert_format(tree, packet.pinfo, ei->expert_field, packet.tvb, start, length, "%s%s",
+            proto_tree_add_expert_format(tree, packet.pinfo, ei->expert_field_, packet.tvb, start, length, "%s%s",
                                          field_prefix.c_str(), value.message.c_str());
             break;
         }
