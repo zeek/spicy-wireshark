@@ -22,6 +22,8 @@
 
 #include "plugin-config.h"
 
+extern "C" WS_DLL_PUBLIC_DEF void plugin_register();
+
 using namespace spicy::wireshark;
 
 std::optional<Packet> spicy::wireshark::CurrentPacket;
@@ -45,21 +47,27 @@ void Packet::record(data::Value&& value) {
 
 void Packet::record(const hilti::rt::type_info::Value& value) { record(hiltiValueToDataValue(this, value, {})); }
 
+// Make sure core runtime libraries are RTLD_GLOBAL, so HLTO modules can
+// resolve their symbols regardless of how the plugin itself was loaded.
 static void makePluginSymbolsGlobal() {
-    // Wireshark is loading us with RTLD_LOCAL, but we need to export the HILTI
-    // and Spicy libraries to the HLTOs we'll be loading.
+    static auto promote_library = [](const char* name, void* sym) {
+        Dl_info info;
+        if ( dladdr(sym, &info) && info.dli_fname ) {
+            void* h = dlopen(info.dli_fname, RTLD_NOLOAD | RTLD_GLOBAL);
 
-    Dl_info info;
-    if ( ! dladdr("plugin_register", &info) ) { // just any plugin symbol is fine here
-        spicy_fatal_error("could not get info about Spicy plugin: %s", dlerror());
-        return;
-    }
+            if ( ! h )
+                h = dlopen(info.dli_fname, RTLD_LAZY | RTLD_GLOBAL);
 
-    void* handle = dlopen(info.dli_fname, RTLD_NOLOAD | RTLD_GLOBAL);
-    if ( ! handle ) {
-        spicy_fatal_error("could not re-load Spicy plugin: %s", dlerror());
-        return;
-    }
+            if ( ! h )
+                spicy_fatal_error("could not promote %s (%s) to RTLD_GLOBAL: %s", name, info.dli_fname,
+                                  dlerror());
+        }
+        else
+            spicy_warning("could not resolve shared object for %s", name);
+    };
+
+    promote_library("libhilti", (void*)&hilti::rt::init);
+    promote_library("libspicy", (void*)&spicy::rt::init);
 }
 
 void spicy::wireshark::log_full(const char* domain, enum ws_log_level level, std::string prefix, const char* file,
@@ -568,7 +576,7 @@ static void proto_reg_handoff_spicy() {
 extern "C" {
 extern WS_DLL_PUBLIC_DEF const gchar plugin_version[] = PLUGIN_VERSION_NUMBER;
 extern WS_DLL_PUBLIC_DEF const int plugin_want_major = WIRESHARK_VERSION_MAJOR;
-extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = WIRESHARK_VERSION_MINOR;
+extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = WIRESHARK__VERSION_MINOR;
 
 WS_DLL_PUBLIC_DEF void plugin_register() {
     makePluginSymbolsGlobal();
