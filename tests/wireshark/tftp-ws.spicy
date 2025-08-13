@@ -1,6 +1,7 @@
 # @TEST-EXEC: spicyc -Qjd -L ${MODULE_PATH} -o tftp.hlto %INPUT tftp.spicy
 #
-# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/tftp.pcap -O spicy_TFTP >output 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/tftp.pcap >>output 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/tftp.pcap -O spicy_TFTP >>output 2>&1
 # @TEST-EXEC: btest-diff output
 
 module TFTP_Wireshark;

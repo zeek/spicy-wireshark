@@ -197,8 +197,8 @@ static const spicy::rt::ParsedUnit* dissectParse(Packet* packet, void* data) {
         }
     }
 
-    spicy_debug("tvb-segment-size=%" PRIu64 " tvb-total-size=%" PRIu64 " stream_offset_at_tvb_start=%" PRIu64
-                " offset_in_tvb=%" PRIu64 " stream-end-offset=%" PRIu64 " stream-frozen=%s",
+    spicy_debug("segment-size=%" PRIu64 " tvb-size=%" PRIu64 " tvb-begin=%" PRIu64 " tvb-offset=%" PRIu64
+                " stream-end-offset=%" PRIu64 " stream-frozen=%s",
                 segment_size, tvb_size, packet->endpoint->tvb_begin, packet->endpoint->tvb_offset,
                 packet->endpoint->stream->endOffset().Ref(), packet->endpoint->stream->isFrozen() ? "yes" : "no");
 
@@ -213,6 +213,9 @@ static const spicy::rt::ParsedUnit* dissectParse(Packet* packet, void* data) {
                 packet->record(data::error("spicy.error.parse", hilti::rt::fmt("Protocol error: %s", e.what())));
                 return nullptr;
             }
+
+            auto display_type = util::stripScope(packet->endpoint->unit->value().type().display);
+            packet->endpoint->packet_info[packet->pinfo->num] = display_type;
 
             return packet->endpoint->unit.get();
         }
@@ -242,16 +245,11 @@ static const spicy::rt::ParsedUnit* dissectParse(Packet* packet, void* data) {
             }
             else {
                 auto display_type = util::stripScope(packet->recorded_unit->display);
+                packet->endpoint->packet_info[packet->pinfo->num] = display_type;
 
-                if ( packet->endpoint->unit_packets.empty() )
-                    packet->endpoint->packet_info_addl[packet->pinfo->num] = display_type;
-                else {
-                    packet->endpoint->packet_info_addl[packet->pinfo->num] = hilti::rt::fmt("%s", display_type);
-
-                    for ( auto num : packet->endpoint->unit_packets )
-                        // TODO: These aren't showing up currently, looks like Wireshark is prioritizing TCP?
-                        packet->endpoint->packet_info_addl[num] = hilti::rt::fmt("%s (partial)", display_type);
-                }
+                for ( auto num : packet->endpoint->unit_packets )
+                    // TODO: These aren't showing up currently, looks like Wireshark is prioritizing TCP?
+                    packet->endpoint->packet_info[num] = hilti::rt::fmt("%s (partial)", display_type);
             }
 
             if ( ! packet->endpoint->isActive() ) {
@@ -305,8 +303,6 @@ static void dissectDisplay(const Packet& packet, proto_tree* tree, const data::V
         return;
     }
 
-    col_add_str(packet.pinfo->cinfo, COL_PROTOCOL, value.type->display);
-    col_add_str(packet.pinfo->cinfo, COL_INFO, value.as_string.c_str());
     createProtocolTree(packet, tree, value);
 }
 
@@ -516,15 +512,24 @@ static int proto_dissect_spicy(tvbuff_t* tvb, packet_info* pinfo, proto_tree* tr
         }
     }
 
+    auto value = static_cast<const data::Value*>(p_get_proto_data(wmem_file_scope(), pinfo, dissector->protocol, 0));
+
     col_set_str(pinfo->cinfo, COL_PROTOCOL, dissector->short_name.c_str());
 
-    if ( auto addl = endpoint->packet_info_addl.find(pinfo->num); addl != endpoint->packet_info_addl.end() )
-        // TODO: These aren't being displayed currently, looks like we
-        // don't even get into the dissect function here for packets that
-        // TCP takes care of.
-        col_append_fstr(pinfo->cinfo, COL_INFO, " %s", addl->second.c_str());
+    std::string info_column;
 
-    auto value = static_cast<const data::Value*>(p_get_proto_data(wmem_file_scope(), pinfo, dissector->protocol, 0));
+    if ( auto info = endpoint->packet_info.find(pinfo->num); info != endpoint->packet_info.end() )
+        info_column = info->second;
+
+    if ( value ) {
+        if ( info_column.empty() )
+            info_column = value->as_string;
+        else
+            info_column = hilti::rt::fmt("%s: %s", info_column, value->as_string);
+    }
+
+    col_clear(pinfo->cinfo, COL_INFO);
+    col_append_fstr(pinfo->cinfo, COL_INFO, "%s", info_column.c_str());
 
     if ( value && tree )
         dissectDisplay(*CurrentPacket, tree, *value);

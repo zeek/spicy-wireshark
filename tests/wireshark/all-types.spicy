@@ -1,7 +1,8 @@
 # @TEST-REQUIRES: which tshark && which spicyc
 # @TEST-EXEC: spicyc -Qjd -L ${MODULE_PATH} -o test.hlto %INPUT
 #
-# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/all-types.pcap -O test >output.txt 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/all-types.pcap >>output.txt 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/all-types.pcap -O test >>output.txt 2>&1
 # @TEST-EXEC: btest-diff output.txt
 #
 # Disabled for now; JSON output isn't quite right yet, but not a priority.

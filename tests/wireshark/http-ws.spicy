@@ -1,6 +1,7 @@
 # @TEST-EXEC: spicyc -Qjd -L ${MODULE_PATH} -o http.hlto %INPUT http.spicy
 #
-# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/http.pcap -O spicy_HTTP >output 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/http.pcap >>output 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/http.pcap -O spicy_HTTP >>output 2>&1
 # @TEST-EXEC: btest-diff output
 
 module HTTP_Wireshark;

@@ -123,7 +123,7 @@ struct Endpoint {
     bool display_called =
         false; // set to true wireshark::display() is called from Spicy code anytime during the lifetime of the stream
 
-    std::map<uint32_t, std::string> packet_info_addl; // additional string to add to the column info, indexed by packet number
+    std::map<uint32_t, std::string> packet_info; // string to prefix the column info with, indexed by packet number
 
     util::StaticStorage<data::Value> values;
 
@@ -141,7 +141,7 @@ struct Endpoint {
         tvb_begin = 0;
         tvb_offset = 0;
         display_called = false;
-        packet_info_addl.clear();
+        packet_info.clear();
     }
 
     bool isActive() const { return resumable.has_value() && ! *resumable; }
