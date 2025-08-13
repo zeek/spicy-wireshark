@@ -567,8 +567,8 @@ static void proto_reg_handoff_spicy() {
 
 extern "C" {
 extern WS_DLL_PUBLIC_DEF const gchar plugin_version[] = PLUGIN_VERSION_NUMBER;
-extern WS_DLL_PUBLIC_DEF const int plugin_want_major = 4;
-extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = 2;
+extern WS_DLL_PUBLIC_DEF const int plugin_want_major = WIRESHARK_VERSION_MAJOR;
+extern WS_DLL_PUBLIC_DEF const int plugin_want_minor = WIRESHARK_VERSION_MINOR;
 
 WS_DLL_PUBLIC_DEF void plugin_register() {
     makePluginSymbolsGlobal();

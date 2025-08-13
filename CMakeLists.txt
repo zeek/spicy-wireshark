@@ -33,11 +33,26 @@ include(GNUInstallDirs)
 
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+### Wireshark
+
 if (WS_ROOT)
     set(Wireshark_ROOT "${WS_ROOT}" CACHE PATH "" FORCE)
 endif ()
 
 find_package(Wireshark REQUIRED)
+
+set(WIRESHARK_MIN_VERSION "4.2" CACHE STRING "Minimum required Wireshark version")
+
+if (Wireshark_VERSION VERSION_LESS "${WIRESHARK_MIN_VERSION}")
+    message(FATAL_ERROR
+        "Wireshark ${WIRESHARK_MIN_VERSION} or newer is required; found ${Wireshark_VERSION}")
+endif ()
+
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)" _ "${WIRESHARK_MIN_VERSION}")
+set(WIRESHARK_MIN_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(WIRESHARK_MIN_VERSION_MINOR "${CMAKE_MATCH_2}")
+
+###
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0)
@@ -59,6 +74,12 @@ get_filename_component(WS_PLUGIN_INSTALL_DIR_POSTFIX "${Wireshark_PLUGIN_INSTALL
 add_subdirectory(src)
 
 spicy_print_summary()
+
+if ( Wireshark_FOUND )
+    set(Wireshark_FOUND yes)
+else ()
+    set(Wireshark_FOUND no)
+endif ()
 
 message(
     "\n====================|  Wireshark Installation Summary |===================="

@@ -19,7 +19,7 @@ dissectors.
 
 To build, you need the following prerequisites in place:
 
-- Wireshark version ≥ 4.4, including developer headers
+- Wireshark version ≥ 4.2, including developer headers
 - Spicy version ≥ 1.14 (in development, so you need the
   [main branch from git](https://github.com/zeek/spicy/tree/main) for
   now)
@@ -326,6 +326,3 @@ License
 This Spicy plugin for Wireshark is open source and released under a BSD
 license, which allows for pretty much unrestricted use as long as you
 leave the license header in place. 
-
-Footnotes
----------
