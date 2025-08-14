@@ -1,6 +1,6 @@
 # @TEST-EXEC: spicyc -Qjd -L ${MODULE_PATH} -o echo.hlto %INPUT
 # @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/echo.pcap >>output 2>&1
-# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/echo.pcap -O spicy_echo >>output 2>&1
+# @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/echo.pcap -O spicy_Echo >>output 2>&1
 # @TEST-EXEC: btest-diff output
 
 module Echo;
@@ -17,8 +17,8 @@ public type Reply = unit {
 
 # Let Wireshark know about the dissector.
 Wireshark::register_dissector([
-    $name = "ECHO Protocol",         # long, descriptive dissector name in Wireshark
-    $short_name = "spicy_echo",      # shorthand name for the dissector
+    $name = "Echo Protocol",         # long, descriptive dissector name in Wireshark
+    $short_name = "spicy_Echo",      # shorthand name for the dissector
     $mode = Wireshark::Mode::Packet, # dissect packets individually (common for UDP protocols)
     $ports = set(7/udp),             # well-known port to recognize the protocol
     $parser_orig = Echo::Request,    # type acting as entry point for client-side packets
