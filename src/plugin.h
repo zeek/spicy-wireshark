@@ -17,13 +17,9 @@
 namespace spicy::wireshark {
 
 // Logs messages to the info or debug stream, depending on indentation level, both invisible to user by default.
-#define spicy_info(...)                                                                                               \
-    ::spicy::wireshark::log_full("Spicy", LOG_LEVEL_INFO, "", NULL, -1, NULL,   \
-                                 __VA_ARGS__);
+#define spicy_info(...) ::spicy::wireshark::log_full("Spicy", LOG_LEVEL_INFO, "", NULL, -1, NULL, __VA_ARGS__);
 
-#define spicy_debug(...)                                                                                               \
-    ::spicy::wireshark::log_full("Spicy", LOG_LEVEL_DEBUG, "  * ", NULL, -1, NULL,   \
-                                 __VA_ARGS__);
+#define spicy_debug(...) ::spicy::wireshark::log_full("Spicy", LOG_LEVEL_DEBUG, "  * ", NULL, -1, NULL, __VA_ARGS__);
 
 // Logs messages to noisy debug stream, invisible to user by default.
 #define spicy_noisy(...) ::spicy::wireshark::log_full("Spicy", LOG_LEVEL_NOISY, "    - ", NULL, -1, NULL, __VA_ARGS__);
@@ -118,8 +114,8 @@ struct Endpoint {
     std::optional<hilti::rt::Resumable> resumable;
     hilti::rt::ValueReference<spicy::rt::ParsedUnit> unit;
     std::set<uint32_t> unit_packets; // packets that have contributed to current unit
-    uint64_t tvb_begin = 0; // tvb's start inside the global stream
-    uint64_t tvb_offset = 0; // offset of current packet inside the tvb
+    uint64_t tvb_begin = 0;          // tvb's start inside the global stream
+    uint64_t tvb_offset = 0;         // offset of current packet inside the tvb
     bool display_called =
         false; // set to true wireshark::display() is called from Spicy code anytime during the lifetime of the stream
 
