@@ -1,4 +1,3 @@
-
 if (NOT CMAKE_BUILD_TYPE)
     # CMake doesn't set build type by default.
     set(CMAKE_BUILD_TYPE "Debug")
@@ -18,15 +17,16 @@ add_custom_command(
     OUTPUT "${AUTOGEN_H}/wireshark.h"
     COMMAND ${SPICYC} -P '' "${CMAKE_SOURCE_DIR}/lib/wireshark.spicy" -o "${AUTOGEN_H}/wireshark.h"
     DEPENDS ${SPICYC} "${CMAKE_SOURCE_DIR}/lib/wireshark.spicy"
-    COMMENT "Generating wireshark.h"
-)
+    COMMENT "Generating wireshark.h")
 
-add_custom_target(update_version
+add_custom_target(
+    update_version
     COMMAND ${CMAKE_SOURCE_DIR}/cmake/project-version.sh --update "${AUTOGEN_H}/version.h"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+    COMMENT "Generating ${AUTOGEN_H}/version.h")
 
-add_custom_target(generate_header ALL DEPENDS "${AUTOGEN_H}/wireshark.h" update_version)
+add_custom_target(generate_header ALL DEPENDS "${AUTOGEN_H}/wireshark.h" update_version
+                  COMMENT "Generating ${AUTOGEN_H}/wireshark.h")
 set_target_properties(generate_header PROPERTIES ADDITIONAL_CLEAN_FILES "${AUTOGEN_H}/wireshark.h")
 set_target_properties(generate_header PROPERTIES ADDITIONAL_CLEAN_FILES "${AUTOGEN_H}/version.h")
 
@@ -34,7 +34,10 @@ add_library(ws-spicy MODULE plugin.cc tree-builder.cc)
 add_dependencies(ws-spicy generate_header)
 set_target_properties(ws-spicy PROPERTIES OUTPUT_NAME "spicy")
 set_target_properties(ws-spicy PROPERTIES PREFIX "")
-set_target_properties(ws-spicy PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugin/${WS_PLUGIN_INSTALL_DIR_POSTFIX}/epan")
+# cmake-format: off
+set_target_properties(ws-spicy
+    PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugin/${WS_PLUGIN_INSTALL_DIR_POSTFIX}/epan")
+# cmake-format: on
 target_compile_options(ws-spicy PRIVATE "-Wall")
 
 target_include_directories(ws-spicy PRIVATE ${CMAKE_CURRENT_BINARY_DIR})

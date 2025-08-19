@@ -18,6 +18,14 @@ repos:
     args: ["--quiet"]
     stages: ["pre-commit"]
 
+- repo: https://github.com/cheshirekow/cmake-format-precommit
+  rev: v0.6.13
+  hooks:
+  - id: cmake-format
+    stages: ["pre-commit"]
+  - id: cmake-lint
+    stages: ["pre-commit"]
+
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.12.9
   hooks:
