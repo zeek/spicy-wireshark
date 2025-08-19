@@ -17,7 +17,7 @@ protocol, compile that grammar into a loadable module with Spicy's
 compiler, and then have the plugin load that module into Wireshark at
 startup. Generally, any Spicy grammar will work, meaning in particular
 you can reuse any existing grammars, such as any [that Zeek
-uses](https://docs.zeek.org/en/master/devel/spicy/index.html). 
+uses](https://docs.zeek.org/en/master/devel/spicy/index.html).
 
 The only additional piece you need is a small addition to each Spicy
 grammar that registers a new dissector with Wireshark. We walk through
@@ -37,7 +37,7 @@ To build, you need the following prerequisites in place:
   developer headers
   - Note that the development headers often come in a separate
     package, such as `wireshark-dev` on Ubuntu.
-- [Spicy](https://docs.zeek.org/projects/spicy) ≥ 1.14 
+- [Spicy](https://docs.zeek.org/projects/spicy) ≥ 1.14
     - See the [Spicy installation
       instructions](https://docs.zeek.org/projects/spicy/en/latest/installation.html)
       for installation options.
@@ -67,11 +67,11 @@ Spicy plugin listed in the output.
 
 ```bash
 # apt install wireshark wireshark-dev tshark cmake
-# curl -LO https://github.com/zeek/spicy/releases/download/v1.14.0/spicy_linux_ubuntu24.deb 
+# curl -LO https://github.com/zeek/spicy/releases/download/v1.14.0/spicy_linux_ubuntu24.deb
 # dpkg --install spicy_linux_ubuntu24.deb
 
 # ./configure --spicy-root=/opt/spicy
-# make 
+# make
 # make install
 
 ```
@@ -96,8 +96,8 @@ headers, so you need to install both versions to use the Spicy plugin:
 # brew install wireshark
 # brew install wireshark-app
 
-# ./configure --wireshark-use-personal-plugin-dir --wireshark-root="$(brew --prefix wireshark)" 
-# make 
+# ./configure --wireshark-use-personal-plugin-dir --wireshark-root="$(brew --prefix wireshark)"
+# make
 # make install
 ```
 
@@ -156,11 +156,11 @@ module Echo;
 
 import Wireshark;
 
-public type Request = unit { 
+public type Request = unit {
     message: bytes &eod; # read all payload until end of data
 };
 
-public type Reply = unit { 
+public type Reply = unit {
     message: bytes &eod;
 };
 
@@ -233,7 +233,7 @@ the example packet trace in `tests/Traces/`, yields the screenshot at
 the top of this page. In `tshark`, it looks like this:
 
 ```
-# tshark -r tests/Traces/echo.pcap -O spicy_Echo 
+# tshark -r tests/Traces/echo.pcap -O spicy_Echo
 Frame 1: 47 bytes on wire (376 bits), 47 bytes captured (376 bits)
 Internet Protocol Version 4, Src: 192.168.1.100, Dst: 192.168.1.200
 User Datagram Protocol, Src Port: 12345, Dst Port: 7
@@ -270,7 +270,7 @@ names are generally of the form
 `<short_name>.<unit_name>.<field_name>`. For example, in the Echo
 dissector, the request's `message` field is accessible as
 `spicy_echo.request.message`, and the reply's as
-`spicy_echo.reply.message`. 
+`spicy_echo.reply.message`.
 
 
 Dissecting TCP Protocols
@@ -340,7 +340,7 @@ Wireshark would only display the parsed data at the *end* of the
 stream, because that's when the top-level unit has been fully
 parsed.[^end-of-stream] For a protocol like HTTP, that's not really
 helpful, as we clearly want to see the individual requests as they
-arrive. 
+arrive.
 
 [^end-of-stream]: This may be never! Wireshark doesn't reliably flag
 the end of a TCP stream to a dissector; and if the plugin doesn't
@@ -374,7 +374,7 @@ Limitations
 This Wireshark plugin is still very much a work in progress. The main
 goal right now is to evaluate the overall feasibility of the approach,
 as well as understand what it will take to make it a viable
-alternative to writing production dissectors in C or Lua. 
+alternative to writing production dissectors in C or Lua.
 
 As such, the plugin comes with some limitations for now:
 
@@ -403,11 +403,11 @@ Feedback
 --------
 
 Feel free to open issues or pull requests for anything you'd like to
-see changed. 
+see changed.
 
 License
 -------
 
 This Spicy plugin for Wireshark is open source and released under a BSD
 license, which allows for pretty much unrestricted use as long as you
-leave the license header in place. 
+leave the license header in place.
