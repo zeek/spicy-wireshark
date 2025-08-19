@@ -1,13 +1,10 @@
-
 cmake_minimum_required(VERSION 3.15.0)
 
 execute_process(
-        COMMAND cmake/project-version.sh --print
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE PLUGIN_VERSION_NUMBER
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        ERROR_QUIET
-)
+    COMMAND cmake/project-version.sh --print
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE PLUGIN_VERSION_NUMBER
+    OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
 
 string(REGEX MATCH "([0-9]*)\.([0-9]*)\.([0-9]*).*" _ ${PLUGIN_VERSION_NUMBER})
 set(PLUGIN_VERSION_NUMBER_MAIN "${CMAKE_MATCH_1}" CACHE STRING "")
@@ -45,8 +42,9 @@ find_package(Wireshark REQUIRED)
 set(WIRESHARK_MIN_VERSION "4.2" CACHE STRING "Minimum required Wireshark version")
 
 if (Wireshark_VERSION VERSION_LESS "${WIRESHARK_MIN_VERSION}")
-    message(FATAL_ERROR
-        "Wireshark ${WIRESHARK_MIN_VERSION} or newer is required; found ${Wireshark_VERSION}")
+    message(
+        FATAL_ERROR
+            "Wireshark ${WIRESHARK_MIN_VERSION} or newer is required; found ${Wireshark_VERSION}")
 endif ()
 
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)" _ "${WIRESHARK_MIN_VERSION}")
@@ -76,7 +74,7 @@ add_subdirectory(src)
 
 spicy_print_summary()
 
-if ( Wireshark_FOUND )
+if (Wireshark_FOUND)
     set(Wireshark_FOUND yes)
 else ()
     set(Wireshark_FOUND no)

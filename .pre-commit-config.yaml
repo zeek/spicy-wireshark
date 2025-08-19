@@ -18,4 +18,12 @@ repos:
     args: ["--quiet"]
     stages: ["pre-commit"]
 
+- repo: https://github.com/cheshirekow/cmake-format-precommit
+  rev: v0.6.13
+  hooks:
+  - id: cmake-format
+    stages: ["pre-commit"]
+  - id: cmake-lint
+    stages: ["pre-commit"]
+
 exclude: '^tests/Baseline'
