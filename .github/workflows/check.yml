@@ -1,0 +1,73 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Run tests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - "macos-latest"
+          - "ubuntu-latest"
+
+        spicy_version:
+          - "v1.14.0"
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@9eb8b7a50af98b743c606d4520e9a098c5733bef
+      with:
+        create-symlink: true
+        key: ${{ github.job }}-${{ matrix.platform }}
+
+    - name: Install dependencies (mac)
+      if: ${{ contains(matrix.platform, 'mac') }}
+      run: |
+        brew tap zeek/zeek
+        brew install wireshark spicy pipx
+        pipx install btest
+
+    - name: Install dependencies (ubuntu)
+      if: ${{ contains(matrix.platform, 'ubuntu') }}
+      run: |
+        sudo apt-get -y install wireshark wireshark-dev tshark cmake curl pipx
+        curl -LO https://github.com/zeek/spicy/releases/download/${{ matrix.spicy_version }}/spicy_linux_ubuntu24.deb
+        sudo dpkg --install spicy_linux_ubuntu24.deb
+        pipx install btest
+        echo /opt/spicy/bin >> "$GITHUB_PATH"
+
+    - name: Build
+      run: |
+        ./configure --wireshark-root="$(brew --prefix wireshark)"
+        cmake --build build/
+
+    - name: Test
+      working-directory: tests
+      run: |
+        btest -dj
+
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+    - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd
