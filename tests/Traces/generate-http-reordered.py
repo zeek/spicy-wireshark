@@ -3,9 +3,11 @@
 # Helper script to generate a pcap file with a single HTTP request
 # split across 5 packets that arrive in reverse order (requiring reassembly).
 
-from scapy.all import *
+from scapy.all import IP, TCP, Raw, wrpcap
 import os
 import sys
+import time
+
 
 # Create packets for HTTP session with reordered request
 packets = []
@@ -35,8 +37,6 @@ ack = IP(src=client_ip, dst=server_ip) / TCP(
 packets.append(ack)
 
 # Set base timestamp for all packets
-import time
-
 base_time = time.time()
 
 # Set timestamps for handshake packets

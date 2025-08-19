@@ -3,7 +3,7 @@
 # Helper script to generate a pcap file with a single HTTP session containing
 # two requests with their replies.
 
-from scapy.all import *
+from scapy.all import IP, TCP, Raw, wrpcap
 import os
 import sys
 

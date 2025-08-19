@@ -2,7 +2,7 @@
 #
 # Helper script to (re)-generate the pcap file for the test wireshark/all-types.spicy.
 
-from scapy.all import *
+from scapy.all import IP, UDP, Raw, wrpcap
 import struct
 import os
 import sys

@@ -2,7 +2,7 @@
 #
 # Helper script to generate a pcap file with TFTP packets for each opcode defined in RFC 1350.
 
-from scapy.all import *
+from scapy.all import UDP, IP, Raw, wrpcap
 import struct
 import os
 import sys
