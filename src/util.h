@@ -1,7 +1,7 @@
-
 #pragma once
 
 #include <algorithm>
+
 #include <hilti/rt/util.h>
 
 namespace spicy::wireshark::util {
@@ -37,9 +37,7 @@ inline std::string toLower(const std::string& s) {
     return t;
 }
 
-inline std::string stripScope(const std::string& fqid) {
-    return hilti::rt::rsplit1(fqid, "::").second;
-}
+inline std::string stripScope(const std::string& fqid) { return hilti::rt::rsplit1(fqid, "::").second; }
 
 /**
  * Pairs up the elements of two vectors.
@@ -58,4 +56,3 @@ std::vector<std::pair<A, B>> zip2(const std::vector<A>& lhs, const std::vector<B
 }
 
 } // namespace spicy::wireshark::util
-

@@ -1,10 +1,7 @@
+#define WS_BUILD_DLL
+
 #include "plugin.h"
 
-#include "hilti/rt/util.h"
-#include "spicy/rt/parsed-unit.h"
-#include "tree-builder.h"
-#include "util.h"
-#define WS_BUILD_DLL
 #include <dlfcn.h>
 #include <epan/addr_resolv.h>
 #include <epan/conversation.h>
@@ -17,10 +14,14 @@
 #include <wsutil/wslog.h>
 
 #include <hilti/rt/libhilti.h>
+#include <hilti/rt/util.h>
 
 #include <spicy/rt/libspicy.h>
+#include <spicy/rt/parsed-unit.h>
 
 #include "plugin-config.h"
+#include "tree-builder.h"
+#include "util.h"
 
 extern "C" WS_DLL_PUBLIC_DEF void plugin_register();
 
@@ -59,8 +60,7 @@ static void makePluginSymbolsGlobal() {
                 h = dlopen(info.dli_fname, RTLD_LAZY | RTLD_GLOBAL);
 
             if ( ! h )
-                spicy_fatal_error("could not promote %s (%s) to RTLD_GLOBAL: %s", name, info.dli_fname,
-                                  dlerror());
+                spicy_fatal_error("could not promote %s (%s) to RTLD_GLOBAL: %s", name, info.dli_fname, dlerror());
         }
         else
             spicy_warning("could not resolve shared object for %s", name);
