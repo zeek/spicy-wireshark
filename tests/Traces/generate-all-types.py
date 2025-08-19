@@ -16,7 +16,7 @@ payload += b"ABCDE"
 # b: int16;
 payload += struct.pack(">h", 12345)  # signed 16-bit: 12345
 
-# c: int32; 
+# c: int32;
 payload += struct.pack(">i", 987654321)  # signed 32-bit: 987654321
 
 # d: int64;

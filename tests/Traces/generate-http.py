@@ -150,7 +150,7 @@ http_response2 = (
     "\r\n"
 ) + http_body2
 
-# Split second HTTP response across 3 packets  
+# Split second HTTP response across 3 packets
 http_response2_headers = (
     "HTTP/1.1 200 OK\r\n"
     "Date: Mon, 01 Apr 2024 12:00:05 GMT\r\n"

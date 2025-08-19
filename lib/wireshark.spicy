@@ -22,4 +22,3 @@ public function display(unit_: any &cxx-any-as-ptr) &cxxname="::spicy_wireshark:
 function X() {
     display(42);
 }
-

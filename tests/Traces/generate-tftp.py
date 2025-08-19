@@ -24,7 +24,7 @@ rrq_payload += b"octet\x00"         # mode + null terminator
 rrq_packet = IP(src=client_ip, dst=server_ip) / UDP(sport=client_port, dport=server_port) / Raw(load=rrq_payload)
 packets.append(rrq_packet)
 
-# 2. WRQ (Write Request) - opcode 2  
+# 2. WRQ (Write Request) - opcode 2
 # Format: opcode(2) + filename + 0 + mode + 0
 wrq_payload = struct.pack(">H", 2)  # opcode 2
 wrq_payload += b"upload.txt\x00"    # filename + null terminator
