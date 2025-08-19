@@ -16,7 +16,7 @@ payload += b"ABCDE"
 # b: int16;
 payload += struct.pack(">h", 12345)  # signed 16-bit: 12345
 
-# c: int32; 
+# c: int32;
 payload += struct.pack(">i", 987654321)  # signed 32-bit: 987654321
 
 # d: int64;
@@ -50,13 +50,19 @@ payload += b"q"  # q: converts to interval(4.0)
 payload += b"r"  # r: converts to MyEnum(2)
 
 # s: MyBitfield;
-payload += struct.pack(">B", 0b10101010)  # MyBitfield: 8 bits with alternating bits set (dec 170)
+payload += struct.pack(
+    ">B", 0b10101010
+)  # MyBitfield: 8 bits with alternating bits set (dec 170)
 
 # anonymous 16-bit bitfield
-payload += struct.pack(">H", 0xffff)  # anonymous 16-bit bitfield
+payload += struct.pack(">H", 0xFFFF)  # anonymous 16-bit bitfield
 
 # Create UDP packet
-packet = IP(src="192.168.1.100", dst="192.168.1.200") / UDP(sport=12345, dport=8888) / Raw(load=payload)
+packet = (
+    IP(src="192.168.1.100", dst="192.168.1.200")
+    / UDP(sport=12345, dport=8888)
+    / Raw(load=payload)
+)
 
 # Write to pcap file
 # Derive path to Traces directory from script location

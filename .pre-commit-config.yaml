@@ -9,3 +9,9 @@ repos:
   - id: clang-format
     types_or: ["c", "c++"]
     stages: ["pre-commit"]
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.12.9
+  hooks:
+  - id: ruff-format
+
+exclude: '^tests/Baseline'
