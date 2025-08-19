@@ -1,9 +1,16 @@
+// Copyright (c) 2025 by the Zeek Project. See LICENSE for details.
 
 #pragma once
 
 #include <epan/dissectors/packet-tcp.h>
 #include <epan/proto_data.h>
 #include <wireshark.h>
+
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <hilti/rt/type-info.h>
 
@@ -23,7 +30,7 @@ struct Value;
 struct Vector;
 
 struct Boxed : std::vector<Value> {
-    Boxed(Value value);
+    explicit Boxed(Value value);
     const auto& value() const;
 };
 

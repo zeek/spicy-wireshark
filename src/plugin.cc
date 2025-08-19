@@ -1,3 +1,5 @@
+// Copyright (c) 2025 by the Zeek Project. See LICENSE for details.
+
 #define WS_BUILD_DLL
 
 #include "plugin.h"
@@ -12,6 +14,10 @@
 #include <wireshark.h>
 #include <wsutil/filesystem.h>
 #include <wsutil/wslog.h>
+
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <hilti/rt/libhilti.h>
 #include <hilti/rt/util.h>
@@ -66,8 +72,8 @@ static void makePluginSymbolsGlobal() {
             spicy_warning("could not resolve shared object for %s", name);
     };
 
-    promote_library("libhilti", (void*)&hilti::rt::init);
-    promote_library("libspicy", (void*)&spicy::rt::init);
+    promote_library("libhilti", reinterpret_cast<void*>(&hilti::rt::init));
+    promote_library("libspicy", reinterpret_cast<void*>(&spicy::rt::init));
 }
 
 void spicy::wireshark::log_full(const char* domain, enum ws_log_level level, std::string prefix, const char* file,
@@ -161,11 +167,11 @@ static const spicy::rt::ParsedUnit* dissectParse(Packet* packet, void* data) {
 
     spicy_info("%s: parsing with %s", log_frame_prefix(*packet).c_str(), parser->type_info->display);
 
-    auto tvb_size = (uint64_t)tvb_reported_length(packet->tvb);
+    auto tvb_size = static_cast<uint64_t>(tvb_reported_length(packet->tvb));
     if ( tvb_size == 0 )
         return nullptr;
 
-    auto segment_size = (uint64_t)tvb_reported_length_remaining(packet->tvb, packet->endpoint->tvb_offset);
+    auto segment_size = static_cast<uint64_t>(tvb_reported_length_remaining(packet->tvb, packet->endpoint->tvb_offset));
 
     // Need to copy data from the tvb to a buffer, so that we can pass it to Spicy.
     auto* buffer =

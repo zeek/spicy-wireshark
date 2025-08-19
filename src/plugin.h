@@ -1,3 +1,4 @@
+// Copyright (c) 2025 by the Zeek Project. See LICENSE for details.
 
 #pragma once
 
@@ -6,6 +7,11 @@
 #include <epan/packet.h>
 #include <wsutil/filesystem.h>
 #include <wsutil/wslog.h>
+
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
 
 #include <hilti/rt/types/enum.h>
 

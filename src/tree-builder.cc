@@ -1,3 +1,4 @@
+// Copyright (c) 2025 by the Zeek Project. See LICENSE for details.
 
 #include "tree-builder.h"
 
@@ -5,6 +6,8 @@
 #include <epan/to_str.h>
 
 #include <cctype>
+#include <string>
+#include <utility>
 
 #include <hilti/rt/util.h>
 
