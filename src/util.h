@@ -1,6 +1,11 @@
+// Copyright (c) 2025 by the Zeek Project. See LICENSE for details.
+
 #pragma once
 
 #include <algorithm>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <hilti/rt/util.h>
 
@@ -50,7 +55,7 @@ std::vector<std::pair<A, B>> zip2(const std::vector<A>& lhs, const std::vector<B
     for ( std::pair<typename std::vector<A>::const_iterator, typename std::vector<B>::const_iterator> iter =
               std::pair<typename std::vector<A>::const_iterator, typename std::vector<B>::const_iterator>(lhs.cbegin(),
                                                                                                           rhs.cbegin());
-          iter.first != lhs.end() and iter.second != rhs.end(); ++iter.first, ++iter.second )
+          iter.first != lhs.end() && iter.second != rhs.end(); ++iter.first, ++iter.second )
         result.emplace_back(*iter.first, *iter.second);
     return result;
 }
