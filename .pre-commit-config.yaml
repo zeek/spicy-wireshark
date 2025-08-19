@@ -35,4 +35,9 @@ repos:
   - id: cmake-lint
     stages: ["pre-commit"]
 
+- repo: https://github.com/crate-ci/typos
+  rev: v1.35.4
+  hooks:
+  - id: typos
+
 exclude: '^tests/Baseline'
