@@ -15,6 +15,7 @@ set(PLUGIN_VERSION_NUMBER_MAIN "${CMAKE_MATCH_1}" CACHE STRING "")
 project(WiresharkPlugin VERSION "${PLUGIN_VERSION_NUMBER_MAIN}" LANGUAGES CXX)
 
 option(USE_CCACHE "" "no")
+option(SPICY_ROOT_DIR "" "")
 option(WS_ROOT "" "")
 option(WS_INCLUDE_DIR "" "")
 option(WS_PLUGIN_DIR "" "")

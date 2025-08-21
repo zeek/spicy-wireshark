@@ -11,6 +11,7 @@ cmake_build_type="RelWithDebInfo"
 cmake_generator=""
 cmake_install_prefix="/usr/local"
 cmake_use_ccache="no"
+cmake_spicy_root=""
 cmake_ws_root=""
 cmake_ws_include_directory=""
 cmake_ws_plugin_directory=""
@@ -50,6 +51,8 @@ Usage: $0 [OPTION]... [VAR=VALUE]...
     --generator=<generator>             CMake generator to use (see cmake --help)
     --prefix=PATH                       Installation prefix [default: ${cmake_install_prefix}]
 
+    --spicy-root=PATH                   Override Spicy root directory
+
     --wireshark-root=PATH               Override Wireshark root directory
     --wireshark-include-dir=PATH        Override Wireshark include directory
     --wireshark-plugin-dir=PATH         Override Wireshark plugin directory
@@ -85,6 +88,8 @@ while [ $# -ne 0 ]; do
         --generator=*)                          cmake_generator="${optarg}";;
         --prefix=*)                             cmake_install_prefix="${optarg}";;
 
+        --spicy-root=*)                         cmake_spicy_root="${optarg}";;
+
         --wireshark-root=*)                     cmake_ws_root="${optarg}";;
         --wireshark-include-dir=*)              cmake_ws_include_directory="${optarg}";;
         --wireshark-plugin-dir=*)               cmake_ws_plugin_directory="${optarg}";;
@@ -102,6 +107,7 @@ done
 append_cache_entry CMAKE_BUILD_TYPE             STRING "${cmake_build_type}"
 append_cache_entry CMAKE_INSTALL_PREFIX         PATH   "${cmake_install_prefix}"
 append_cache_entry USE_CCACHE                   BOOL   "${cmake_use_ccache}"
+append_cache_entry SPICY_ROOT_DIR               PATH   "${cmake_spicy_root}"
 append_cache_entry WS_ROOT                      PATH   "${cmake_ws_root}"
 append_cache_entry WS_INCLUDE_DIR               PATH   "${cmake_ws_include_directory}"
 append_cache_entry WS_PLUGIN_DIR                PATH   "${cmake_ws_plugin_directory}"
