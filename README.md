@@ -1,3 +1,6 @@
+
+![Spicy Echo dissector in Wireshark](echo.png)
+
 Spicy Wireshark Plugin
 ======================
 
@@ -5,9 +8,6 @@ This is a Wireshark plugin for writing new dissectors with
 [Spicy](https://docs.zeek.org/projects/spicy), a high-level language
 for parsing arbitrary protocols. By using Spicy, you can add
 new dissectors to Wireshark without needing to write C or Lua code.
-
-The plugin should support the standard Unix-style platforms (but not
-Windows currently).
 
 Overview
 --------
@@ -27,21 +27,30 @@ Installation
 ------------
 
 You need to build the plugin from source as an external plugin that
-Wireshark will load at startup. The plugin links against the Spicy
-runtime library, and it requires the Spicy toolchain to compile custom
-dissectors.
+Wireshark will load at startup. It should generally work on any
+platform that Spicy supports, including Linux and macOS, but
+currently not Windows.
 
 To build, you need the following prerequisites in place:
 
-- Wireshark version ≥ 4.2, including developer headers
-- Spicy version ≥ 1.14 (in development, so you need the
-  [main branch from git](https://github.com/zeek/spicy/tree/main) for
-  now)
+- [Wireshark](https://www.wireshark.org) ≥ 4.2, including
+  developer headers
+  - Note that the development headers often come in a separate
+    package, such as `wireshark-dev` on Ubuntu.
+- [Spicy](https://docs.zeek.org/projects/spicy) ≥ 1.14 
+    - See the [Spicy installation
+      instructions](https://docs.zeek.org/projects/spicy/en/latest/installation.html)
+      for installation options.
+    - You can also [install
+      Zeek](https://docs.zeek.org/en/master/install.html), which
+      comes with Spicy. You'll need Zeek ≥ 8.0.
 - A reasonable modern version of GCC or Clang with C++20 support
 - CMake ≥ 3.15
 
-Make sure that both the Spicy compiler `spicyc` and Wireshark's
-`tshark` are in your `PATH`. Then configure and build the plugin:
+Make sure that both Wireshark's `tshark` and Spicy's compiler `spicyc`
+are available in your `PATH`.
+
+Then configure and build the plugin:
 
 ```
 # ./configure && make && make install
@@ -49,9 +58,54 @@ Make sure that both the Spicy compiler `spicyc` and Wireshark's
 
 This will install the plugin into Wireshark's system-wide plugin
 directory. If you now run `tshark -G plugins`, you should see the
-Spicy plugin listed in the output now.
+Spicy plugin listed in the output.
 
-Optional build customizations:
+#### Platform-specific notes:
+
+<details>
+<summary><tt>Ubuntu 24.04</tt></summary>
+
+```bash
+# apt install wireshark wireshark-dev tshark cmake
+# curl -LO https://github.com/zeek/spicy/releases/download/v1.14.0/spicy_linux_ubuntu24.deb && dpkg --install spicy_linux_ubuntu24.deb
+# cd /path/to/spicy-wireshark && ./configure --spicy-root=/opt/spicy && make && make install
+```
+
+To make the Spicy tools available in your `PATH`, set:
+
+```bash
+# export PATH=$PATH:/opt/spicy/bin
+```
+
+</details>
+
+<details>
+<summary><tt>macOS, using Homebrew</tt></summary>
+
+Homebrew provides two Wireshark versions: a cask that installs the
+full UI version, and a formula that installs only the command-line
+tools. The cask unfortunately does not include the development
+headers, so you need to install both versions to use the Spicy plugin:
+
+```bash
+# brew install wireshark
+# brew install wireshark-app
+# cd /path/to/spicy-wireshark && ./configure --wireshark-root="$(brew --prefix wireshark)" --wireshark-use-personal-plugin-dir && make && make install
+```
+
+The Wireshark application will then be available in the user's
+`~/Applications/` folder.
+
+Note that Homebrew's two Wireshark installations (formula and cask),
+use different global plugin directories. To work around that, the
+`configure` command above specifies
+`--wireshark-use-personal-plugin-dir`. That installs the Spicy plugin
+into the user's personal plugin directory, which is the same for
+both versions.
+
+</details>
+
+#### Optional build customizations:
 
 - If `configure` cannot find the Wireshark installation, you can pass
   it some hints:
@@ -61,12 +115,18 @@ Optional build customizations:
     --wireshark-include-dir=PATH        Override Wireshark include directory
   ```
 
+- Likewise, if `configure` cannot find the Spicy installation:
+
+  ```
+    --spicy-root=PATH                   Override Spicy root directory
+  ```
+
 - To install the plugin into the user's personal plugin directory,
   instead of system-wide, add `--wireshark-use-personal-plugin-dir`
   to the `configure` command.
 
-Instead of installing, you can also just point Wireshark directly to
-the plugin's build directory by setting `WIRESHARK_PLUGIN_DIR`:
+Instead of installing the plugin, you can also just point Wireshark
+directly to the build directory by setting `WIRESHARK_PLUGIN_DIR`:
 
 ```
 # export WIRESHARK_PLUGIN_DIR=$(pwd)/build/plugin
@@ -78,7 +138,7 @@ Example Usage
 Let's create a trivial [UDP
 Echo](https://datatracker.ietf.org/doc/html/rfc862) dissector for
 Wireshark using Spicy. Here's a Spicy grammar that just parses the
-content of whole packets into a single, binary `message` field for
+content of entire packets into a single, binary `message` field for
 both requests and replies:
 
 ```spicy
@@ -160,13 +220,24 @@ spnego-krb5	SPNEGO-KRB5
 ...
 ```
 
-That means we can now use the new dissector in Wireshark, using an
-example packet trace in the `tests/Traces/` directory:
+That means we can now use the new dissector in Wireshark. Giving it
+the example packet trace in `tests/Traces/`, yields the screenshot at
+the top of this page. In `tshark`, it looks like this:
 
-![Spicy Echo dissector in Wireshark](echo.png)
+```
+# tshark -r tests/Traces/echo.pcap -O spicy_Echo 
+Frame 1: 47 bytes on wire (376 bits), 47 bytes captured (376 bits)
+Internet Protocol Version 4, Src: 192.168.1.100, Dst: 192.168.1.200
+User Datagram Protocol, Src Port: 12345, Dst Port: 7
+Echo Protocol, Request: [$message=b"Hello, Spicy World!"]
+    message: Hello, Spicy World!
 
-We have added a new dissector to Wireshark.
-
+Frame 2: 47 bytes on wire (376 bits), 47 bytes captured (376 bits)
+Internet Protocol Version 4, Src: 192.168.1.200, Dst: 192.168.1.100
+User Datagram Protocol, Src Port: 7, Dst Port: 12345
+Echo Protocol, Reply: [$message=b"Hello, Spicy World!"]
+    message: Hello, Spicy World!
+```
 
 Customizing the Display
 -----------------------
@@ -176,7 +247,7 @@ the Spicy grammar's unit types. Currently there's only one part of
 this process that can be customized: the single-line PDU summary shown
 in Wireshark's packet information column. By default, that summary
 represents Spicy's `print` output for the unit (that's the
-`[$message=b"Hello, Spicy World!"` in the Echo example). However, if
+`[$message=b"Hello, Spicy World!"]` in the Echo example). However, if
 there's an [on
 %print()](https://docs.zeek.org/projects/spicy/en/latest/programming/parsing.html#unit-hooks)
 hook defined for the unit, its output will be used instead.
@@ -197,7 +268,7 @@ dissector, the request's `message` field is accessible as
 Dissecting TCP Protocols
 ------------------------
 
-Dissecting TCP-based protocols is (just) a little bit more involved,
+Dissecting TCP-based protocols is a little bit more involved,
 as they typically consist of a series of PDUs split across multiple
 TCP segments. To support that, the plugin deploys a slightly different
 model, per the following.
@@ -205,7 +276,7 @@ model, per the following.
 For a TCP protocol, when registering a dissector, the `$mode` should be
 `Wireshark::Mode::Stream` instead of `Wireshark::Mode::Packet`. This
 tells the plugin that the payload of each side of a connection should
-be parsed as single stream of bytes, working with Wireshark's TCP
+be parsed as a single stream of bytes, working with Wireshark's TCP
 stream reassembly to reconstruct PDUs from packets as it processes
 them.
 
@@ -263,11 +334,11 @@ parsed.[^end-of-stream] For a protocol like HTTP, that's not really
 helpful, as we clearly want to see the individual requests as they
 arrive. 
 
-[^end-of-stream]: This may be: never! Wireshark doesn't reliably flag
+[^end-of-stream]: This may be never! Wireshark doesn't reliably flag
 the end of a TCP stream to a dissector; and if the plugin doesn't
 learn about the end of the stream, it will not show any dissected data
 at all by default. So if your TCP-based dissector doesn't seem to
-display anythings at all, keep reading for how to provide display
+display anything at all, keep reading for how to provide display
 hints.
 
 To address this, a dissector needs to provide a little more help: it
@@ -307,7 +378,7 @@ As such, the plugin comes with some limitations for now:
   Wireshark displays the parsed fields. Whereas a traditional C or Lua
   dissector has full control over the tree structure, this plugin
   derives the display generically from the protocol's structure. We
-  plan to make additional mechanism available here to customize that
+  plan to make additional mechanisms available here to customize that
   process.
 
 - There's currently no way to provide textual descriptions for any of
@@ -317,14 +388,14 @@ As such, the plugin comes with some limitations for now:
 
 - The plugin does not yet support Spicy's unit contexts.
 
-- `tshark`'s output option `-O <format>` isn't yet supported. While it
-  produces output, some of it isn't correct.
+- The `tshark` output option `-O <format>` is not yet fully supported. While it
+  produces output, some of it is not correct.
 
 Feedback
 --------
 
-Feel free to open issues, or pull requests, for anything you'd like to
-see different. 
+Feel free to open issues or pull requests for anything you'd like to
+see changed. 
 
 License
 -------
