@@ -5,7 +5,7 @@
 #include <epan/proto_data.h>
 #include <wireshark.h>
 
-#include "type-info.h"
+#include <hilti/rt/type-info.h>
 
 namespace spicy::wireshark {
 
