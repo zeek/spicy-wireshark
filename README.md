@@ -60,15 +60,20 @@ This will install the plugin into Wireshark's system-wide plugin
 directory. If you now run `tshark -G plugins`, you should see the
 Spicy plugin listed in the output.
 
-#### Platform-specific notes:
+#### Platform-specific installation notes:
 
 <details>
 <summary><tt>Ubuntu 24.04</tt></summary>
 
 ```bash
 # apt install wireshark wireshark-dev tshark cmake
-# curl -LO https://github.com/zeek/spicy/releases/download/v1.14.0/spicy_linux_ubuntu24.deb && dpkg --install spicy_linux_ubuntu24.deb
-# cd /path/to/spicy-wireshark && ./configure --spicy-root=/opt/spicy && make && make install
+# curl -LO https://github.com/zeek/spicy/releases/download/v1.14.0/spicy_linux_ubuntu24.deb 
+# dpkg --install spicy_linux_ubuntu24.deb
+
+# ./configure --spicy-root=/opt/spicy
+# make 
+# make install
+
 ```
 
 To make the Spicy tools available in your `PATH`, set:
@@ -80,7 +85,7 @@ To make the Spicy tools available in your `PATH`, set:
 </details>
 
 <details>
-<summary><tt>macOS, using Homebrew</tt></summary>
+<summary><tt>macOS (with Homebrew)</tt></summary>
 
 Homebrew provides two Wireshark versions: a cask that installs the
 full UI version, and a formula that installs only the command-line
@@ -90,7 +95,10 @@ headers, so you need to install both versions to use the Spicy plugin:
 ```bash
 # brew install wireshark
 # brew install wireshark-app
-# cd /path/to/spicy-wireshark && ./configure --wireshark-root="$(brew --prefix wireshark)" --wireshark-use-personal-plugin-dir && make && make install
+
+# ./configure --wireshark-use-personal-plugin-dir --wireshark-root="$(brew --prefix wireshark)" 
+# make 
+# make install
 ```
 
 The Wireshark application will then be available in the user's
