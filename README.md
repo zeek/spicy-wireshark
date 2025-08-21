@@ -1,6 +1,4 @@
 
-![Spicy Echo dissector in Wireshark](echo.png)
-
 Spicy Wireshark Plugin
 ======================
 
@@ -8,6 +6,8 @@ This is a Wireshark plugin for writing new dissectors with
 [Spicy](https://docs.zeek.org/projects/spicy), a high-level language
 for parsing arbitrary protocols. By using Spicy, you can add
 new dissectors to Wireshark without needing to write C or Lua code.
+
+![Spicy Echo dissector in Wireshark](echo.png)
 
 Overview
 --------
