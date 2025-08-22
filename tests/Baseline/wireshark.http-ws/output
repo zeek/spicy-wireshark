@@ -2,20 +2,20 @@
     1   0.000000 192.168.1.100 → 192.168.1.200 TCP 40 45678 → 80 [SYN] Seq=0 Win=8192 Len=0
     2   0.000094 192.168.1.200 → 192.168.1.100 TCP 40 80 → 45678 [SYN, ACK] Seq=0 Ack=1 Win=8192 Len=0
     3   0.000145 192.168.1.100 → 192.168.1.200 TCP 40 45678 → 80 [ACK] Seq=1 Ack=1 Win=8192 Len=0
-    4   0.000192 192.168.1.100 → 192.168.1.200 spicy_HTTP 85 
-    5   0.000287 192.168.1.100 → 192.168.1.200 spicy_HTTP 187 [TCP PDU reassembled in 5]
+    4   0.000192 192.168.1.100 → 192.168.1.200 <service> 85
+    5   0.000287 192.168.1.100 → 192.168.1.200 <service> 187
     6   0.000375 192.168.1.100 → 192.168.1.200 spicy_HTTP 99 Request: [$request=[$method=b"GET", $uri=b"/index.html", $version=[$number=b"1.1"]], $message=[$headers=[[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"], [$name=b"Accept-Language", $content=b"en-US,en;q=0.5"], [$name=b"Connection", $content=b"keep-alive"]], $end_of_hdr=b"\x0d\x0a", $body=(not set), $has_body=False, $is_request=True, $content_encoding=(not set), $use_content_length=True, $body_len=(not set), $content_length=(not set), $content_type=(b"TEXT", b"PLAIN"), $content_type_parameter=(not set), $delivery_mode=DeliveryMode::EndOfData, $multipart_boundary=(not set), $transfer_encoding=(not set)]]
     7   0.000463 192.168.1.200 → 192.168.1.100 TCP 40 80 → 45678 [ACK] Seq=1 Ack=252 Win=8192 Len=0
-    8   0.000511 192.168.1.200 → 192.168.1.100 spicy_HTTP 117 
-    9   0.000599 192.168.1.200 → 192.168.1.100 spicy_HTTP 127 [TCP PDU reassembled in 9]
+    8   0.000511 192.168.1.200 → 192.168.1.100 <service> 117
+    9   0.000599 192.168.1.200 → 192.168.1.100 <service> 127
    10   0.000689 192.168.1.200 → 192.168.1.100 spicy_HTTP 166 Reply: [$reply=[$version=[$number=b"1.1"], $status=200, $reason=b"OK"], $message=[$headers=[[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:00 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Length", $content=b"126"], [$name=b"Connection", $content=b"keep-alive"]], $end_of_hdr=b"\x0d\x0a", $body=[$data=<sink>], $has_body=True, $is_request=False, $content_encoding=(not set), $use_content_length=True, $body_len=126, $content_length=126, $content_type=(b"TEXT", b"HTML"), $content_type_parameter=b"charset=UTF-8", $delivery_mode=DeliveryMode::Length, $multipart_boundary=(not set), $transfer_encoding=(not set)]]
    11   0.000775 192.168.1.100 → 192.168.1.200 TCP 40 45678 → 80 [ACK] Seq=252 Ack=291 Win=8192 Len=0
-   12   0.000821 192.168.1.100 → 192.168.1.200 spicy_HTTP 85 
-   13   0.000906 192.168.1.100 → 192.168.1.200 spicy_HTTP 187 [TCP PDU reassembled in 13]
+   12   0.000821 192.168.1.100 → 192.168.1.200 <service> 85
+   13   0.000906 192.168.1.100 → 192.168.1.200 <service> 187
    14   0.001028 192.168.1.100 → 192.168.1.200 spicy_HTTP 99 Request: [$request=[$method=b"GET", $uri=b"/about.html", $version=[$number=b"1.1"]], $message=[$headers=[[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"], [$name=b"Accept-Language", $content=b"en-US,en;q=0.5"], [$name=b"Connection", $content=b"keep-alive"]], $end_of_hdr=b"\x0d\x0a", $body=(not set), $has_body=False, $is_request=True, $content_encoding=(not set), $use_content_length=True, $body_len=(not set), $content_length=(not set), $content_type=(b"TEXT", b"PLAIN"), $content_type_parameter=(not set), $delivery_mode=DeliveryMode::EndOfData, $multipart_boundary=(not set), $transfer_encoding=(not set)]]
    15   0.001114 192.168.1.200 → 192.168.1.100 TCP 40 80 → 45678 [ACK] Seq=291 Ack=503 Win=8192 Len=0
-   16   0.001159 192.168.1.200 → 192.168.1.100 spicy_HTTP 117 
-   17   0.001245 192.168.1.200 → 192.168.1.100 spicy_HTTP 127 [TCP PDU reassembled in 17]
+   16   0.001159 192.168.1.200 → 192.168.1.100 <service> 117
+   17   0.001245 192.168.1.200 → 192.168.1.100 <service> 127
    18   0.001331 192.168.1.200 → 192.168.1.100 spicy_HTTP 160 Reply: [$reply=[$version=[$number=b"1.1"], $status=200, $reason=b"OK"], $message=[$headers=[[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:05 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Length", $content=b"120"], [$name=b"Connection", $content=b"keep-alive"]], $end_of_hdr=b"\x0d\x0a", $body=[$data=<sink>], $has_body=True, $is_request=False, $content_encoding=(not set), $use_content_length=True, $body_len=120, $content_length=120, $content_type=(b"TEXT", b"HTML"), $content_type_parameter=b"charset=UTF-8", $delivery_mode=DeliveryMode::Length, $multipart_boundary=(not set), $transfer_encoding=(not set)]]
    19   0.001415 192.168.1.100 → 192.168.1.200 TCP 40 45678 → 80 [ACK] Seq=503 Ack=575 Win=8192 Len=0
    20   0.001459 192.168.1.100 → 192.168.1.200 TCP 40 45678 → 80 [FIN, ACK] Seq=503 Ack=575 Win=8192 Len=0
@@ -52,7 +52,7 @@ Hypertext Transfer Protocol [Spicy], Request: [$request=[$method=b"GET", $uri=b"
         version: [$number=b"1.1"]
             number: 1.1
     message: [$headers=[[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (W …
-        […] headers: [[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/xhtml+xml,application/xml;q=0.9,*
+        […] headers: [[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/
             [$name=b"Host", $content=b"example.com"]
                 name: Host
                 content: example.com
@@ -100,7 +100,7 @@ Hypertext Transfer Protocol [Spicy], Reply: [$reply=[$version=[$number=b"1.1"], 
         status: 200
         reason: OK
     message: [$headers=[[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:00 GMT"], [$name=b"Server", $content=b" …
-        […] headers: [[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:00 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Length", $content=b"126"], [$name=b"C
+        […] headers: [[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:00 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Leng
             [$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:00 GMT"]
                 name: Date
                 content: Mon, 01 Apr 2024 12:00:00 GMT
@@ -152,7 +152,7 @@ Hypertext Transfer Protocol [Spicy], Request: [$request=[$method=b"GET", $uri=b"
         version: [$number=b"1.1"]
             number: 1.1
     message: [$headers=[[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (W …
-        […] headers: [[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/xhtml+xml,application/xml;q=0.9,*
+        […] headers: [[$name=b"Host", $content=b"example.com"], [$name=b"User-Agent", $content=b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"], [$name=b"Accept", $content=b"text/html,application/
             [$name=b"Host", $content=b"example.com"]
                 name: Host
                 content: example.com
@@ -200,7 +200,7 @@ Hypertext Transfer Protocol [Spicy], Reply: [$reply=[$version=[$number=b"1.1"], 
         status: 200
         reason: OK
     message: [$headers=[[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:05 GMT"], [$name=b"Server", $content=b" …
-        […] headers: [[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:05 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Length", $content=b"120"], [$name=b"C
+        […] headers: [[$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:05 GMT"], [$name=b"Server", $content=b"Apache/2.4.41"], [$name=b"Content-Type", $content=b"text/html; charset=UTF-8"], [$name=b"Content-Leng
             [$name=b"Date", $content=b"Mon, 01 Apr 2024 12:00:05 GMT"]
                 name: Date
                 content: Mon, 01 Apr 2024 12:00:05 GMT

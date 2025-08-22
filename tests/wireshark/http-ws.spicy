@@ -2,7 +2,7 @@
 #
 # @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/http.pcap >>output 2>&1
 # @TEST-EXEC: WIRESHARK_SPICY_MODULE_PATH=. tshark -r ${TRACES}/http.pcap -O spicy_HTTP >>output 2>&1
-# @TEST-EXEC: btest-diff output
+# @TEST-EXEC: TEST_DIFF_CANONIFIER=${SCRIPTS}/canonify-tshark btest-diff output
 
 module HTTP_Wireshark;
 

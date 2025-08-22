@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# Hide version differences in tshark's output.
+
+cat \
+  | sed 's#[A-Za-z_]\{1,\} \([0-9]\{1,\}\) $#<service> \1#g' \
+  | sed 's#[A-Za-z_]\{1,\} \([0-9]\{1,\}\) \[TCP.*PDU.*\]$#<service> \1#g' \
+  | sed 's# \[truncated\]\(.\{1,200\}\).*#[…] \1#g' \
+  | sed 's#\[…\] \(.\{1,200\}\).*#[…] \1#g'
