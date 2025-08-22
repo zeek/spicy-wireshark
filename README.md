@@ -6,8 +6,6 @@ This is a Wireshark plugin for writing new dissectors with
 for parsing arbitrary protocols. By using Spicy, you can add
 new dissectors to Wireshark without needing to write C or Lua code.
 
-![Spicy Echo dissector in Wireshark](echo.png)
-
 ## Overview
 
 Basic usage is simple: Write a Spicy grammar that describes the
@@ -16,9 +14,18 @@ compiler, and then have the plugin load that module into Wireshark at
 startup. Generally, any Spicy grammar will work, meaning in particular
 you can reuse any existing grammars, such as any [that Zeek
 uses](https://docs.zeek.org/en/master/devel/spicy/index.html).
-
 The only additional piece you need is a small addition to each Spicy
 grammar that registers a new dissector with Wireshark.
+
+### Example
+
+![Spicy Echo dissector in Wireshark](echo.png)
+
+Creating this Wireshark dissector for the (trivial) UDP Echo protocol
+takes about ~20 lines of Spicy code, generously formatted and
+including Wireshark registration. We will walk through the example
+below.
+>>>>>>> 0c4c7a1 (Polish README a bit further.)
 
 ## Installation
 
@@ -139,7 +146,7 @@ directly to the build directory by setting `WIRESHARK_PLUGIN_DIR`:
 export WIRESHARK_PLUGIN_DIR=$(pwd)/build/plugin
 ```
 
-## Example Usage
+## Complete Example
 
 Let's create a trivial [UDP
 Echo](https://datatracker.ietf.org/doc/html/rfc862) dissector for
@@ -226,9 +233,9 @@ spnego-krb5 SPNEGO-KRB5
 ...
 ```
 
-That means we can now use the new dissector in Wireshark. Giving it
-the example packet trace in `tests/Traces/`, yields the screenshot at
-the top of this page. In `tshark`, it looks like this:
+That means we can now use the new dissector in Wireshark. Using the
+example packet trace in `tests/Traces/`, yields the screenshot at the
+top of this page. In `tshark`, it looks like this:
 
 ```console
 tshark -r tests/Traces/echo.pcap -O spicy_Echo
@@ -250,11 +257,11 @@ Echo Protocol, Reply: [$message=b"Hello, Spicy World!"]
 Generally, the Spicy plugin derives the Wireshark tree structure from
 the Spicy grammar's unit types. Currently there's only one part of
 this process that can be customized: the single-line PDU summary shown
-in Wireshark's packet information column. By default, that summary
-represents Spicy's `print` output for the unit (that's the
-`[$message=b"Hello, Spicy World!"]` in the Echo example). However, if
-there's an [on
-%print()](https://docs.zeek.org/projects/spicy/en/latest/programming/parsing.html#unit-hooks)
+in Wireshark's packet information column. That summary represents
+Spicy's `print` output for the unit, which by default takes the
+`[<fields>]` form that the Echo example shows (e.g.,
+`[$message=b"Hello, Spicy World!"]`). However, if there's a
+[%print()](https://docs.zeek.org/projects/spicy/en/latest/programming/parsing.html#unit-hooks)
 hook defined for the unit, its output will be used instead.
 
 ## Display Filters
