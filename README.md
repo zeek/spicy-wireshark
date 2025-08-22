@@ -25,7 +25,6 @@ Creating this Wireshark dissector for the (trivial) UDP Echo protocol
 takes about ~20 lines of Spicy code, generously formatted and
 including Wireshark registration. We will walk through the example
 below.
->>>>>>> 0c4c7a1 (Polish README a bit further.)
 
 ## Installation
 
