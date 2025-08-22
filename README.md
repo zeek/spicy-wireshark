@@ -85,11 +85,15 @@ export PATH=$PATH:/opt/spicy/bin
 Homebrew provides two Wireshark versions: a cask that installs the
 full UI version, and a formula that installs only the command-line
 tools. The cask unfortunately does not include the development
-headers, so you need to install both versions to use the Spicy plugin:
+headers, so you need to install both versions to use the Spicy plugin.
+The Zeek project provides Spicy through a custom Homebrew tap:
 
 ```console
 brew install wireshark
 brew install wireshark-app
+
+brew tap zeek/zeek
+brew install spicy
 
 ./configure --wireshark-use-personal-plugin-dir --wireshark-root="$(brew --prefix wireshark)"
 make
