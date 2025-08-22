@@ -37,16 +37,17 @@ jobs:
         create-symlink: true
         key: ${{ github.job }}-${{ matrix.platform }}
 
-    - name: Install dependencies (mac)
+    - name: Install dependencies (Mac)
       if: ${{ contains(matrix.platform, 'mac') }}
       run: |
         brew tap zeek/zeek
         brew install wireshark spicy pipx
         pipx install btest
 
-    - name: Install dependencies (ubuntu)
+    - name: Install dependencies (Ubuntu)
       if: ${{ contains(matrix.platform, 'ubuntu') }}
       run: |
+        sudo apt-get update
         sudo apt-get -y install wireshark wireshark-dev tshark cmake curl pipx
         curl -LO https://github.com/zeek/spicy/releases/download/${{ matrix.spicy_version }}/spicy_linux_ubuntu24.deb
         sudo dpkg --install spicy_linux_ubuntu24.deb
